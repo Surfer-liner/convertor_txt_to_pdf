@@ -9,7 +9,7 @@ def convert_txt_to_pdf(input_file):
     try:
         # Find path to desktop
         desktop_path = str(Path.home() / 'Desktop')
-        # Path to .ttx file if it is on the desktop
+        # Path to .txt file if it is on the desktop
         path_to_input_file = desktop_path + '/' + input_file
         # Create buffer
         buffer = BytesIO()
