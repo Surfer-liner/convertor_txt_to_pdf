@@ -26,3 +26,6 @@ for el in range(1, 3):
     pdf.drawString(0 + x, 0 + y, text)
     y += 13
 pdf.save()
+
+
+# +++++++++++
