@@ -1,53 +1,37 @@
-import sys, os
-from io import BytesIO
 from pathlib import Path
 from reportlab.pdfgen import canvas
-
-sys.path.append('/Users/surfer_liner/python_/projects/useful_functions')
 # Find path to desktop
 desktop_path = str(Path.home() / 'Desktop')
-
 # ==============================================================================
 # Enter here .txt filename on desktop
-txt_filename = 'test.txt'
+input_txt = 'test.txt'
+# ==============================================================================
+# Create PDF file on Desktop
+pdf = canvas.Canvas(desktop_path + '/output.pdf')
+# Starting text coordinates for A4 format
+y = 780
+x = 60
+# String length
+length = 90
+# Set font
+pdf.setFont("Helvetica", 10)
 # ==============================================================================
 
+# Open and save content in variable
+with open(desktop_path + '/' + input_txt, 'r') as f:
+    txt_file_content = f.readlines()
 
-def convert_txt_to_pdf(input_file):
-    '''Simple convertor from .txt to .pdf'''
-    try:
-        # Path to .txt file if it is on the desktop
-        path_to_input_file = desktop_path + '/' + txt_filename
-
-        # Create buffer
-        buffer = BytesIO()
-        # Create PDF Canvas
-        pdf = canvas.Canvas(buffer)
-        # Open .txt file and read context
-
-        with open(path_to_input_file, 'r') as f:
-            txt_file_content = f.readlines()
-            # Save context as string
-            file_content = ' '.join(txt_file_content)
-
-        # Weight of PDF page
-        string_len = 87
-        # Numbers of strings to PDF file
-        strings = round(len(''.join(txt_file_content)) / string_len)
-
-
-
-
-
-        # Close and save PDF Canvas
-        pdf.save()
-        # Create path to new PDF
-        path_to_output_pdf = os.path.join(desktop_path, 'output.pdf')
-        # Save PDF file to desktop
-        with open(path_to_output_pdf, 'wb') as f:
-            f.write(buffer.getvalue())
-    except FileNotFoundError:
-        print(f'File <{input_file}> not found\nCheck file name and try again')
-
-
-convert_txt_to_pdf(txt_filename)
+# Add content in PDF file
+for string_inside in txt_file_content:
+    index = 0
+    if len(string_inside) >= length:
+        strings_in_string_inside = round(len(string_inside) / length)
+        for string in range(int(strings_in_string_inside)):
+            string_to_print = string_inside[index:index + length]
+            pdf.drawString(x, y, string_to_print.rstrip('\n'))
+            index += length
+            y -= 13
+    elif len(string_inside) < length:
+        pdf.drawString(x, y, string_inside[:-1])
+        y -= 13
+pdf.save()
